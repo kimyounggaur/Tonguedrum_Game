@@ -70,6 +70,7 @@ const hammerEl      = document.getElementById("hammer-cursor");
 /* ---------- 유틸 ---------- */
 const rand = (min, max) => Math.random() * (max - min) + min;
 const randInt = (min, max) => Math.floor(rand(min, max + 1));
+const isTouchLikePointer = () => window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
 
 function track(timeoutId) {
   pendingTimeouts.push(timeoutId);
@@ -113,7 +114,10 @@ function init() {
   gameScreenEl.addEventListener("pointerenter", () => {
     if (gameStatus === GameStatus.RUNNING) hammerEl.classList.add("visible");
   });
-  gameScreenEl.addEventListener("pointerleave", () => hammerEl.classList.remove("visible"));
+  gameScreenEl.addEventListener("pointerleave", () => {
+    if (gameStatus === GameStatus.RUNNING && isTouchLikePointer()) return;
+    hammerEl.classList.remove("visible");
+  });
 
   // 스테이지 위에선 기본 우클릭/드래그 방지
   stageEl.addEventListener("contextmenu", (e) => e.preventDefault());
@@ -162,6 +166,7 @@ function startGame() {
   timerEl.classList.remove("warn");
   showScreen("game");
   hammerEl.classList.add("visible");
+  requestAnimationFrame(positionHammerForTouch);
 
   ensureAudio();
 
@@ -286,6 +291,14 @@ function hideAnyActiveMole(immediate) {
     document.querySelectorAll(".star-burst, .orbit-stars, .plus10-text").forEach((el) => el.remove());
   }
   activeMole = null;
+}
+
+function positionHammerForTouch() {
+  if (gameStatus !== GameStatus.RUNNING || !isTouchLikePointer()) return;
+  const rect = stageEl.getBoundingClientRect();
+  hammerEl.style.left = (rect.left + rect.width * 0.78) + "px";
+  hammerEl.style.top  = (rect.top + rect.height * 0.28) + "px";
+  hammerEl.classList.add("visible");
 }
 
 /* ============================================================
