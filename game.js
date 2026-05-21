@@ -35,6 +35,7 @@ const MOLE_LEAVE_MS       = 180;
 const NEXT_MOLE_DELAY_MIN = 120;
 const NEXT_MOLE_DELAY_MAX = 350;
 const HIT_STAR_MS         = 300;
+const HIT_REACTION_MS     = 420;
 const PLUS10_FLOAT_MS     = 500;
 const HAMMER_SWING_MS     = 180;
 const TIMER_WARN_SEC      = 10;
@@ -272,10 +273,10 @@ function beginLeaving(slotId, reason) {
 
 function hideAnyActiveMole(immediate) {
   document.querySelectorAll(".mole").forEach((m) => {
-    m.classList.remove("up", "leaving");
+    m.classList.remove("up", "leaving", "hit-shake");
   });
   if (immediate) {
-    document.querySelectorAll(".star-burst, .plus10-text").forEach((el) => el.remove());
+    document.querySelectorAll(".star-burst, .orbit-stars, .plus10-text").forEach((el) => el.remove());
   }
   activeMole = null;
 }
@@ -322,11 +323,14 @@ function onMoleHit(slot, clientX, clientY) {
 
   updateScore(SCORE_PER_HIT);
 
+  activeMole.status = "hit";
+  playMoleHitReaction(slot);
   spawnStarBurst(slot);
+  spawnOrbitStars(slot);
   spawnPlus10(clientX, clientY);
   playHitSound();
 
-  beginLeaving(slot.id, "hit");
+  track(setTimeout(() => beginLeaving(slot.id, "hit"), HIT_REACTION_MS));
 }
 
 /* ============================================================
@@ -366,6 +370,37 @@ function spawnStarBurst(slot) {
   star.addEventListener("animationend", () => star.remove(), { once: true });
   // 안전망: 애니메이션 이벤트 누락 시 강제 제거
   track(setTimeout(() => star.remove(), HIT_STAR_MS + 200));
+}
+
+function playMoleHitReaction(slot) {
+  const slotEl = moleContainer.querySelector(`[data-slot-id="${slot.id}"]`);
+  const moleImg = slotEl && slotEl.querySelector(".mole");
+  if (!moleImg) return;
+
+  moleImg.classList.remove("hit-shake");
+  void moleImg.offsetWidth;
+  moleImg.classList.add("hit-shake");
+  track(setTimeout(() => moleImg.classList.remove("hit-shake"), HIT_REACTION_MS + 80));
+}
+
+function spawnOrbitStars(slot) {
+  const orbit = document.createElement("div");
+  orbit.className = "orbit-stars";
+  orbit.style.left = slot.x + "%";
+  orbit.style.top  = (slot.y - 3) + "%";
+
+  for (let i = 0; i < 3; i++) {
+    const star = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    star.setAttribute("class", "orbit-star");
+    star.setAttribute("viewBox", "0 0 24 24");
+    star.setAttribute("aria-hidden", "true");
+    star.innerHTML = '<path d="M12 1.8 14.9 8l6.8.8-5 4.6 1.3 6.7-6-3.4-6 3.4 1.3-6.7-5-4.6L9.1 8 12 1.8Z"/>';
+    orbit.appendChild(star);
+  }
+
+  moleContainer.appendChild(orbit);
+  orbit.addEventListener("animationend", () => orbit.remove(), { once: true });
+  track(setTimeout(() => orbit.remove(), HIT_REACTION_MS + 180));
 }
 
 function spawnPlus10(clientX, clientY) {
