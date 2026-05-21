@@ -1,0 +1,314 @@
+/* ============================================================
+   Steel Tongue Drum Whack-a-Mole — Styles
+   ============================================================ */
+
+:root {
+  --color-bg:          #FFFFFF;
+  --color-primary:     #4A7BC8;     /* Start/Restart 버튼 */
+  --color-primary-hov: #5E8FD8;
+  --color-score:       #E94B7B;
+  --color-timer:       #222222;
+  --color-timer-warn:  #FF3B30;     /* 10초 이하 깜빡임 */
+  --font-display: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --shadow-soft:  0 4px 12px rgba(0, 0, 0, 0.15);
+  --radius-md:    8px;
+}
+
+/* ---------- Reset / Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+
+body {
+  font-family: var(--font-display);
+  background: var(--color-bg);
+  color: #222;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+}
+
+img { display: block; max-width: 100%; user-select: none; -webkit-user-drag: none; }
+
+/* ---------- Layout ---------- */
+#game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.screen[hidden] { display: none !important; }
+
+/* ---------- Stage (텅드럼 무대) ---------- */
+.stage {
+  position: relative;
+  width: min(96vw, 1200px);
+  aspect-ratio: 1536 / 847;
+  max-height: 80vh;
+}
+
+.tonguedrum {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* ---------- Buttons ---------- */
+.primary-btn {
+  background: var(--color-primary);
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: clamp(18px, 2.4vw, 28px);
+  padding: 14px 36px;
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: background 120ms ease, transform 80ms ease;
+}
+.primary-btn:hover { background: var(--color-primary-hov); }
+.primary-btn:active { transform: translateY(1px) scale(0.98); }
+.primary-btn:focus-visible { outline: 3px solid #FFB74D; outline-offset: 3px; }
+
+/* ---------- Start Screen ---------- */
+#start-screen #start-btn {
+  position: absolute;
+  left: 4%;
+  top: 6%;
+  z-index: 10;
+}
+
+#start-screen .hint {
+  font-size: clamp(14px, 1.6vw, 20px);
+  color: #555;
+  margin: 0;
+  text-align: center;
+}
+
+/* ---------- Game Screen HUD ---------- */
+#game-screen .hud {
+  position: absolute;
+  top: 16px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 4vw;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.timer {
+  font-size: clamp(20px, 2.8vw, 36px);
+  font-weight: 800;
+  color: var(--color-timer);
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius-md);
+  padding: 6px 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+.score {
+  font-size: clamp(20px, 2.8vw, 36px);
+  font-weight: 800;
+  color: var(--color-score);
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius-md);
+  padding: 6px 16px;
+  box-shadow: var(--shadow-soft);
+  transform-origin: center;
+}
+
+@keyframes timer-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.timer.warn {
+  color: var(--color-timer-warn);
+  animation: timer-blink 0.6s infinite;
+}
+
+@keyframes score-pulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.score.pulsing { animation: score-pulse 280ms ease-out; }
+
+/* ---------- Game Screen Stage / Cursor ---------- */
+#game-screen {
+  cursor: none;
+  touch-action: none;
+}
+
+#game-screen .stage {
+  cursor: none;
+}
+
+/* ---------- End Screen ---------- */
+#end-screen {
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(4px);
+}
+
+.end-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  background: #fff;
+  padding: clamp(28px, 5vw, 56px) clamp(36px, 7vw, 80px);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+  text-align: center;
+}
+
+.end-title {
+  margin: 0;
+  font-size: clamp(28px, 4.5vw, 56px);
+  font-weight: 900;
+  color: #222;
+}
+
+.end-score {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 36px);
+  font-weight: 700;
+  color: var(--color-score);
+}
+
+#final-score {
+  font-size: 1.2em;
+  font-weight: 900;
+}
+
+.end-message {
+  margin: 0;
+  font-size: clamp(16px, 2vw, 22px);
+  color: #555;
+}
+
+/* ---------- Mole Slots (Phase 2+) ---------- */
+#mole-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.mole-slot {
+  position: absolute;
+  width: 6.2%;
+  height: 13.2%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Debug hitbox (Phase 2) */
+.mole-slot.debug {
+  overflow: visible;
+  background: rgba(255, 0, 0, 0.28);
+  border: 1px dashed rgba(200, 0, 0, 0.8);
+  border-radius: 50% / 50%;
+}
+.mole-slot.debug::after {
+  content: attr(data-slot-id);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 3px #000;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.mole {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 110%;
+  transform: translate(-50%, 80%);
+  transition: transform 140ms ease-out;
+  pointer-events: none;
+  will-change: transform;
+}
+.mole.up      { transform: translate(-50%, 0); }
+.mole.leaving { transform: translate(-50%, 80%); transition: transform 180ms ease-in; }
+
+/* ---------- Hit effects ---------- */
+@keyframes star-burst {
+  0%   { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+  40%  { transform: translate(-50%, -50%) scale(1.4); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.0); opacity: 0; }
+}
+.star-burst {
+  position: absolute;
+  width: 9%;
+  pointer-events: none;
+  animation: star-burst 300ms ease-out forwards;
+  transform-origin: center;
+  z-index: 8;
+}
+
+@keyframes plus10-float {
+  0%   { transform: translate(-50%, 0)    scale(1);   opacity: 1; }
+  100% { transform: translate(-50%, -30px) scale(1.1); opacity: 0; }
+}
+.plus10-text {
+  position: fixed;
+  width: clamp(60px, 8vw, 110px);
+  pointer-events: none;
+  animation: plus10-float 500ms ease-out forwards;
+  z-index: 9998;
+}
+
+/* ---------- Hammer Cursor ---------- */
+.hammer-cursor {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  width: clamp(70px, 10vw, 140px);
+  transform-origin: 30% 70%;
+  transform: translate(-28%, -30%) rotate(-12deg);
+  transition: transform 95ms cubic-bezier(0.2, 0.9, 0.25, 1);
+  user-select: none;
+  left: 0;
+  top: 0;
+  display: none;
+}
+.hammer-cursor.visible { display: block; }
+.hammer-cursor.swinging {
+  transform: translate(-28%, -30%) rotate(36deg) scale(0.9);
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .mole, .mole.leaving,
+  .star-burst, .plus10-text,
+  .score.pulsing, .timer.warn,
+  .hammer-cursor, .hammer-cursor.swinging {
+    animation-duration: 50% !important;
+    transition-duration: 70ms !important;
+  }
+}

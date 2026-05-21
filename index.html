@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>텅드럼 두더지잡기 🥁</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container">
+
+    <!-- ▣ 시작 화면 -->
+    <section id="start-screen" class="screen" aria-label="시작 화면">
+      <div class="stage">
+        <img class="tonguedrum" src="assets/tonguedrum.png" alt="텅드럼 캐릭터">
+        <button id="start-btn" class="primary-btn" type="button" aria-label="게임 시작">Start!</button>
+      </div>
+      <p class="hint">분홍 망치로 두더지를 60초 안에 최대한 많이 잡으세요!</p>
+    </section>
+
+    <!-- ▣ 게임 화면 -->
+    <section id="game-screen" class="screen" aria-label="게임 화면" hidden>
+      <div class="hud">
+        <div id="timer" class="timer">⏱ 60초</div>
+        <div id="score" class="score">🌟 점수: 0</div>
+      </div>
+      <div class="stage" id="stage">
+        <img class="tonguedrum" src="assets/tonguedrum.png" alt="텅드럼 캐릭터">
+        <div id="mole-container"></div>
+      </div>
+      <img id="hammer-cursor" class="hammer-cursor" src="assets/hammer.png" alt="" aria-hidden="true">
+    </section>
+
+    <!-- ▣ 종료 화면 -->
+    <section id="end-screen" class="screen" aria-label="결과 화면" hidden>
+      <div class="end-card">
+        <h1 class="end-title">게임 종료!</h1>
+        <p class="end-score">최종 점수: <span id="final-score">0</span>점</p>
+        <p id="end-message" class="end-message">조금만 더 연습해요!</p>
+        <button id="restart-btn" class="primary-btn" type="button" aria-label="다시 시작">다시 시작</button>
+      </div>
+    </section>
+
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
