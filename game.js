@@ -286,11 +286,15 @@ function hideAnyActiveMole(immediate) {
 function onPointerMove(e) {
   hammerEl.style.left = e.clientX + "px";
   hammerEl.style.top  = e.clientY + "px";
+  if (gameStatus === GameStatus.RUNNING) hammerEl.classList.add("visible");
 }
 
 function onStagePointerDown(e) {
   // 망치는 항상 휘두름 (게임 중일 때만 의미가 있지만 시각효과는 통일)
-  if (gameStatus === GameStatus.RUNNING) swingHammer();
+  if (gameStatus === GameStatus.RUNNING) {
+    onPointerMove(e);
+    swingHammer();
+  }
 
   if (gameStatus !== GameStatus.RUNNING) return;
   if (!activeMole || activeMole.hit) return;
