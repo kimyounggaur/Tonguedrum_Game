@@ -39,6 +39,7 @@ const HIT_REACTION_MS     = 420;
 const PLUS10_FLOAT_MS     = 500;
 const HAMMER_SWING_MS     = 180;
 const TIMER_WARN_SEC      = 10;
+const TIMER_TICK_SOUND_SRC = "assets/timer-tick.wav";
 
 const DEBUG_HITBOX = false;
 
@@ -52,6 +53,7 @@ let activeMole = null;     // { slotId, status, hit }
 let lastSlotId = null;
 let lastTimerSec = null;
 let audioCtx = null;       // Phase 6: lazy-init
+let timerTickAudio = null;
 
 /* ---------- DOM ---------- */
 const startScreenEl = document.getElementById("start-screen");
@@ -437,9 +439,11 @@ function spawnPlus10(clientX, clientY) {
 }
 
 /* ============================================================
-   사운드 (Web Audio API) — Phase 6
+   사운드 — Phase 6
    ============================================================ */
 function ensureAudio() {
+  ensureTimerTickAudio();
+
   if (audioCtx) {
     if (audioCtx.state === "suspended") audioCtx.resume().catch(() => {});
     return;
@@ -449,6 +453,14 @@ function ensureAudio() {
     if (Ctx) audioCtx = new Ctx();
     if (audioCtx && audioCtx.state === "suspended") audioCtx.resume().catch(() => {});
   } catch (_) { /* 무시 */ }
+}
+
+function ensureTimerTickAudio() {
+  if (timerTickAudio) return;
+  timerTickAudio = new Audio(TIMER_TICK_SOUND_SRC);
+  timerTickAudio.preload = "auto";
+  timerTickAudio.volume = 0.42;
+  timerTickAudio.load();
 }
 
 function playHitSound() {
@@ -467,21 +479,13 @@ function playHitSound() {
 }
 
 function playTimerTickSound(remainingSec) {
-  if (!audioCtx) return;
-  const t0 = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  const isWarning = remainingSec <= TIMER_WARN_SEC;
+  ensureTimerTickAudio();
+  if (!timerTickAudio) return;
 
-  osc.type = "square";
-  osc.frequency.setValueAtTime(isWarning ? 1040 : 720, t0);
-  osc.frequency.exponentialRampToValueAtTime(isWarning ? 820 : 560, t0 + 0.055);
-  gain.gain.setValueAtTime(0.001, t0);
-  gain.gain.exponentialRampToValueAtTime(isWarning ? 0.14 : 0.08, t0 + 0.006);
-  gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.075);
-  osc.connect(gain).connect(audioCtx.destination);
-  osc.start(t0);
-  osc.stop(t0 + 0.085);
+  const isWarning = remainingSec <= TIMER_WARN_SEC;
+  timerTickAudio.volume = isWarning ? 0.58 : 0.42;
+  timerTickAudio.currentTime = 0;
+  timerTickAudio.play().catch(() => {});
 }
 
 function playEndSound() {
