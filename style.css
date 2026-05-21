@@ -214,8 +214,8 @@ img { display: block; max-width: 100%; user-select: none; -webkit-user-drag: non
 
 .mole-slot {
   position: absolute;
-  width: 6.2%;
-  height: 13.2%;
+  width: 5.2%;
+  height: 9.2%;
   transform: translate(-50%, -50%);
   overflow: hidden;
   pointer-events: none;
@@ -246,25 +246,25 @@ img { display: block; max-width: 100%; user-select: none; -webkit-user-drag: non
 .mole {
   position: absolute;
   left: 50%;
-  bottom: 0;
-  width: 110%;
-  transform: translate(-50%, 80%);
+  top: 50%;
+  width: 100%;
+  transform: translate(-50%, 95%);
   transition: transform 140ms ease-out;
   pointer-events: none;
   will-change: transform;
 }
-.mole.up      { transform: translate(-50%, 0); }
-.mole.leaving { transform: translate(-50%, 80%); transition: transform 180ms ease-in; }
+.mole.up      { transform: translate(-50%, -50%); }
+.mole.leaving { transform: translate(-50%, 95%); transition: transform 180ms ease-in; }
 
 /* ---------- Hit effects ---------- */
 @keyframes mole-hit-shake {
-  0%   { transform: translate(-50%, 0) rotate(0deg) scale(1); }
-  15%  { transform: translate(-57%, -4%) rotate(-12deg) scale(1.04); }
-  30%  { transform: translate(-43%, 2%) rotate(10deg) scale(0.98); }
-  45%  { transform: translate(-55%, -3%) rotate(-8deg) scale(1.03); }
-  60%  { transform: translate(-45%, 1%) rotate(6deg) scale(1); }
-  80%  { transform: translate(-52%, -1%) rotate(-3deg) scale(1.01); }
-  100% { transform: translate(-50%, 0) rotate(0deg) scale(1); }
+  0%   { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  15%  { transform: translate(-56%, -54%) rotate(-10deg) scale(1.03); }
+  30%  { transform: translate(-44%, -48%) rotate(8deg) scale(0.98); }
+  45%  { transform: translate(-55%, -53%) rotate(-7deg) scale(1.02); }
+  60%  { transform: translate(-45%, -49%) rotate(5deg) scale(1); }
+  80%  { transform: translate(-52%, -51%) rotate(-3deg) scale(1.01); }
+  100% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
 }
 
 .mole.hit-shake {
