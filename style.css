@@ -433,13 +433,28 @@ img { display: block; max-width: 100%; user-select: none; -webkit-user-drag: non
 
 /* ---------- Mobile Layout ---------- */
 @media (max-width: 640px) {
+  body,
+  .screen {
+    background: #fff;
+  }
+
   .stage {
     width: 100vw;
     max-height: 86svh;
   }
 
+  #game-screen::before {
+    background: #fff;
+    opacity: 1;
+    animation: none;
+  }
+
   #game-screen .stage {
     max-height: calc(100svh - 88px);
+  }
+
+  .game-ambience {
+    display: none;
   }
 }
 
