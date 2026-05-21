@@ -169,6 +169,7 @@ function startGame() {
   requestAnimationFrame(positionHammerForTouch);
 
   ensureAudio();
+  playTimerTickSound(lastTimerSec);
 
   startTime = performance.now();
   rafId = requestAnimationFrame(tickTimer);
@@ -446,6 +447,7 @@ function ensureAudio() {
   try {
     const Ctx = window.AudioContext || window.webkitAudioContext;
     if (Ctx) audioCtx = new Ctx();
+    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume().catch(() => {});
   } catch (_) { /* 무시 */ }
 }
 
