@@ -4,18 +4,23 @@
 
 "use strict";
 
-/* ---------- 상수: tongue 좌표 (검증된 percentage) ---------- */
+/* ---------- 상수: tongue 좌표 (검은 원 기준 percentage) ---------- */
 const TONGUE_SLOTS = [
-  { id: "top-center",        x: 46.8, y: 11.2, rx: 3.1, ry: 5.8 },
-  { id: "upper-left-inner",  x: 39.4, y: 16.9, rx: 3.1, ry: 5.8 },
-  { id: "upper-right-inner", x: 54.2, y: 18.5, rx: 3.1, ry: 5.8 },
-  { id: "left-upper",        x: 33.4, y: 26.9, rx: 3.1, ry: 5.8 },
-  { id: "right-upper",       x: 61.1, y: 30.0, rx: 3.1, ry: 5.8 },
-  { id: "left-mid",          x: 32.3, y: 46.6, rx: 3.1, ry: 5.8 },
-  { id: "right-mid",         x: 59.8, y: 46.6, rx: 3.1, ry: 5.8 },
-  { id: "lower-left",        x: 38.4, y: 56.9, rx: 3.1, ry: 5.8 },
-  { id: "lower-center",      x: 46.6, y: 61.9, rx: 3.1, ry: 5.8 },
-  { id: "lower-right",       x: 55.9, y: 63.3, rx: 3.1, ry: 5.8 },
+  { id: "top-center",          x: 56.47, y: 17.20, rx: 3.1, ry: 5.8 },
+  { id: "upper-right-inner",   x: 64.96, y: 22.71, rx: 3.1, ry: 5.8 },
+  { id: "upper-left-inner",    x: 48.61, y: 24.52, rx: 3.1, ry: 5.8 },
+  { id: "right-upper-outer",   x: 75.03, y: 26.14, rx: 3.1, ry: 5.8 },
+  { id: "left-upper-outer",    x: 37.08, y: 26.75, rx: 3.1, ry: 5.8 },
+  { id: "center-upper",        x: 57.16, y: 35.09, rx: 3.1, ry: 5.8 },
+  { id: "right-mid-inner",     x: 76.94, y: 37.42, rx: 3.1, ry: 5.8 },
+  { id: "left-mid-inner",      x: 36.92, y: 38.35, rx: 3.1, ry: 5.8 },
+  { id: "right-mid-outer",     x: 81.08, y: 47.52, rx: 3.1, ry: 5.8 },
+  { id: "left-mid-outer",      x: 32.25, y: 47.65, rx: 3.1, ry: 5.8 },
+  { id: "lower-left-inner",    x: 41.90, y: 54.90, rx: 3.1, ry: 5.8 },
+  { id: "lower-right-inner",   x: 73.92, y: 55.86, rx: 3.1, ry: 5.8 },
+  { id: "bottom-center",       x: 57.42, y: 62.66, rx: 3.1, ry: 5.8 },
+  { id: "lower-right-outer",   x: 68.43, y: 65.78, rx: 3.1, ry: 5.8 },
+  { id: "lower-left-outer",    x: 45.32, y: 66.75, rx: 3.1, ry: 5.8 },
 ];
 
 /* ---------- 상수: 게임 설정 ---------- */

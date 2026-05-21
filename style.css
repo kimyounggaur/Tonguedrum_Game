@@ -55,7 +55,7 @@ img { display: block; max-width: 100%; user-select: none; -webkit-user-drag: non
 .stage {
   position: relative;
   width: min(96vw, 1200px);
-  aspect-ratio: 1536 / 847;
+  aspect-ratio: 3609 / 3505;
   max-height: 80vh;
 }
 
@@ -302,6 +302,18 @@ img { display: block; max-width: 100%; user-select: none; -webkit-user-drag: non
 .hammer-cursor.visible { display: block; }
 .hammer-cursor.swinging {
   transform: translate(var(--hammer-hit-x), var(--hammer-hit-y)) rotate(36deg) scale(0.9);
+}
+
+/* ---------- Mobile Layout ---------- */
+@media (max-width: 640px) {
+  .stage {
+    width: 100vw;
+    max-height: 86svh;
+  }
+
+  #game-screen .stage {
+    max-height: calc(100svh - 88px);
+  }
 }
 
 /* ---------- Reduced motion ---------- */
