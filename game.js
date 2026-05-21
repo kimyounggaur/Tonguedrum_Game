@@ -26,7 +26,7 @@ const TONGUE_SLOTS = [
 /* ---------- 상수: 게임 설정 ---------- */
 const GameStatus = { IDLE: "idle", RUNNING: "running", ENDED: "ended" };
 
-const GAME_DURATION_MS    = 60_000;
+const GAME_DURATION_MS    = 30_000;
 const SCORE_PER_HIT       = 10;
 const MOLE_ENTER_MS       = 140;
 const MOLE_VISIBLE_MIN_MS = 750;
@@ -164,7 +164,7 @@ function startGame() {
   lastTimerSec = GAME_DURATION_MS / 1000;
 
   updateScoreUI({ pulse: false });
-  timerEl.textContent = "⏱ 60초";
+  timerEl.textContent = "⏱ 30초";
   timerEl.classList.remove("warn");
   showScreen("game");
   hammerEl.classList.add("visible");
