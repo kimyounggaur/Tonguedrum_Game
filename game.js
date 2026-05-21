@@ -50,6 +50,7 @@ let rafId = null;
 let pendingTimeouts = [];
 let activeMole = null;     // { slotId, status, hit }
 let lastSlotId = null;
+let lastTimerSec = null;
 let audioCtx = null;       // Phase 6: lazy-init
 
 /* ---------- DOM ---------- */
@@ -154,6 +155,7 @@ function startGame() {
   score       = 0;
   lastSlotId  = null;
   activeMole  = null;
+  lastTimerSec = GAME_DURATION_MS / 1000;
 
   updateScoreUI({ pulse: false });
   timerEl.textContent = "⏱ 60초";
@@ -197,6 +199,11 @@ function tickTimer() {
   const elapsed = performance.now() - startTime;
   const remainingMs = Math.max(0, GAME_DURATION_MS - elapsed);
   const remainingSec = Math.ceil(remainingMs / 1000);
+
+  if (lastTimerSec !== null && remainingSec !== lastTimerSec && remainingSec > 0) {
+    playTimerTickSound(remainingSec);
+  }
+  lastTimerSec = remainingSec;
 
   timerEl.textContent = `⏱ ${remainingSec}초`;
   timerEl.classList.toggle("warn", remainingSec <= TIMER_WARN_SEC && remainingSec > 0);
@@ -442,6 +449,24 @@ function playHitSound() {
   osc.connect(gain).connect(audioCtx.destination);
   osc.start(t0);
   osc.stop(t0 + 0.1);
+}
+
+function playTimerTickSound(remainingSec) {
+  if (!audioCtx) return;
+  const t0 = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  const isWarning = remainingSec <= TIMER_WARN_SEC;
+
+  osc.type = "square";
+  osc.frequency.setValueAtTime(isWarning ? 1040 : 720, t0);
+  osc.frequency.exponentialRampToValueAtTime(isWarning ? 820 : 560, t0 + 0.055);
+  gain.gain.setValueAtTime(0.001, t0);
+  gain.gain.exponentialRampToValueAtTime(isWarning ? 0.14 : 0.08, t0 + 0.006);
+  gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.075);
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start(t0);
+  osc.stop(t0 + 0.085);
 }
 
 function playEndSound() {
