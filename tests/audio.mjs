@@ -34,8 +34,40 @@ const rows = await page.evaluate(async () => {
   for (const [name, fn] of Object.entries(cases)) out.push({ 상황: name, 피크: await renderPeak(fn), 음소거: await renderPeak(fn, { muted: true }) });
   return out;
 });
+
+const steel = await page.evaluate(async () => {
+  function rms(data, start, end, rate) {
+    let sum = 0; let count = 0;
+    for (let i = Math.floor(start * rate); i < Math.min(data.length, Math.floor(end * rate)); i += 1) {
+      sum += data[i] * data[i]; count += 1;
+    }
+    return Math.sqrt(sum / Math.max(1, count));
+  }
+  function highRms(data, start, end, rate) {
+    let low = 0; let sum = 0; let count = 0;
+    for (let i = Math.floor(start * rate); i < Math.min(data.length, Math.floor(end * rate)); i += 1) {
+      // 약 2kHz 위 성분만 비교해 강한 타격의 금속성 밝기를 검증한다.
+      low += (data[i] - low) * 0.24;
+      const high = data[i] - low;
+      sum += high * high; count += 1;
+    }
+    return Math.sqrt(sum / Math.max(1, count));
+  }
+  async function render(velocity) {
+    const ctx = new OfflineAudioContext(2, 48000 * 3, 48000);
+    const a = Object.assign(Object.create(Object.getPrototypeOf(TDG.audio)), TDG.audio, { ctx: null, voices: [], volume: 0.7, muted: false, _voiceSeed: 0x1234abcd });
+    a.init(ctx);
+    const voice = a.playNote("C4", { velocity });
+    const buf = await ctx.startRendering();
+    const data = buf.getChannelData(0);
+    return { modalCount: voice?.modalCount || 0, attack: rms(data, 0.012, 0.080, buf.sampleRate), high: highRms(data, 0.012, 0.080, buf.sampleRate), tail: rms(data, 0.70, 1.10, buf.sampleRate) };
+  }
+  return { soft: await render(0.2), hard: await render(1) };
+});
 await browser.close();
 console.table(rows);
+console.table([{ 상황: "스틸 모달·세기 반응", 모달: steel.hard.modalCount, 약타: +steel.soft.attack.toFixed(4), 강타: +steel.hard.attack.toFixed(4), 약타고역: +steel.soft.high.toFixed(4), 강타고역: +steel.hard.high.toFixed(4), 울림: +steel.hard.tail.toFixed(4) }]);
 const bad = rows.filter((r) => r.피크 > -0.5 || r.음소거 > -80 || (r.상황.includes("stopAll") && r.피크 > -60));
-console.log(bad.length ? `AUDIO FAIL: ${bad.map((r) => r.상황).join(", ")}` : "AUDIO PASS");
-process.exit(bad.length ? 1 : 0);
+const steelBad = steel.hard.modalCount < 6 || steel.hard.high < steel.soft.high * 1.2 || steel.hard.tail < 0.001;
+console.log(bad.length || steelBad ? `AUDIO FAIL: ${[...bad.map((r) => r.상황), ...(steelBad ? ["스틸 모달·세기 반응"] : [])].join(", ")}` : "AUDIO PASS");
+process.exit(bad.length || steelBad ? 1 : 0);
