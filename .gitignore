@@ -1,0 +1,6 @@
+.DS_Store
+Thumbs.db
+node_modules/
+tests/output/
+.playwright-cli/
+output/

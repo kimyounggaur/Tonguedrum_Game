@@ -1,0 +1,17 @@
+{
+  "name": "tonguedrum-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "logic": "node logic.mjs",
+    "smoke": "node smoke.mjs http://127.0.0.1:8000/",
+    "ui": "node ui.mjs http://127.0.0.1:8000/",
+    "layout": "node layout.mjs http://127.0.0.1:8000/",
+    "audio": "node audio.mjs",
+    "file": "node file.mjs",
+    "offline": "node offline.mjs http://127.0.0.1:8000/"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
+}

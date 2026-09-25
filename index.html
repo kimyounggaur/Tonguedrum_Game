@@ -1,64 +1,415 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <title>텅드럼 두더지잡기 🥁</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="텅드럼의 15개 텅에서 튀어나오는 두더지를 잡으며 텅 위치와 음을 익히는 음악 게임">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="color-scheme" content="light">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="텅드럼 두더지잡기">
+  <meta property="og:description" content="텅에서 튀어나오는 두더지를 잡으며 텅드럼 음을 익혀요!">
+  <meta property="og:image" content="https://kimyounggaur.github.io/Tonguedrum_Game/assets/og-image.jpg">
+  <meta property="og:url" content="https://kimyounggaur.github.io/Tonguedrum_Game/">
+  <title>텅드럼 두더지잡기</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="game-container">
+  <main id="game-container">
+    <div id="offline-badge" class="status-badge offline-badge" role="status" hidden>오프라인에서도 놀 수 있어요</div>
 
-    <!-- ▣ 시작 화면 -->
-    <section id="start-screen" class="screen" aria-label="시작 화면">
-      <div class="stage">
-        <img class="tonguedrum" src="assets/tonguedrum.png" alt="텅드럼 캐릭터">
-        <button id="start-btn" class="primary-btn" type="button" aria-label="게임 시작">Start!</button>
+    <section id="start-screen" class="screen" aria-labelledby="game-title">
+      <div class="start-layout">
+        <div class="stage start-stage">
+          <img
+            class="tonguedrum"
+            src="assets/tonguedrum-2048.webp"
+            srcset="assets/tonguedrum-1024.webp 1024w, assets/tonguedrum-2048.webp 2048w"
+            sizes="(max-width: 640px) 82vw, (max-width: 900px) 460px, 620px"
+            width="3609"
+            height="3505"
+            decoding="async"
+            fetchpriority="high"
+            alt="숫자 음계가 표시된 15키 텅드럼 캐릭터">
+        </div>
+
+        <div class="start-panel">
+          <button id="settings-btn" class="round-btn settings-btn" type="button" aria-label="설정 열기" aria-haspopup="dialog">⚙</button>
+          <p class="eyebrow">보고 · 듣고 · 두드리며 배우는 음악 놀이</p>
+          <h1 id="game-title" class="title">텅드럼<br><span>두더지잡기</span></h1>
+          <p class="hint">텅에서 튀어나오는 두더지를 망치로 콩!<br>15개 음의 자리와 소리를 재미있게 익혀요.</p>
+
+          <div id="preset-badge" class="preset-badge" role="status" hidden>
+            <span aria-hidden="true">👩‍🏫</span>
+            <span id="preset-summary">선생님 설정 적용 중</span>
+            <button id="clear-preset-btn" class="text-btn" type="button">해제</button>
+          </div>
+
+          <fieldset id="mode-group" class="choice-section mode-group">
+            <legend>놀이를 골라요</legend>
+            <div class="mode-grid">
+              <label class="mode-card">
+                <input type="radio" name="mode" value="classic" checked>
+                <span class="mode-card-icon" aria-hidden="true">🔨</span>
+                <span class="mode-card-copy"><strong>두더지잡기</strong><small>빠르게 찾아 콩!</small></span>
+              </label>
+              <label class="mode-card">
+                <input type="radio" name="mode" value="find">
+                <span class="mode-card-icon" aria-hidden="true">🎯</span>
+                <span class="mode-card-copy"><strong>음 찾기</strong><small>보고 듣고 찾아요</small></span>
+              </label>
+              <label class="mode-card">
+                <input type="radio" name="mode" value="melody">
+                <span class="mode-card-icon" aria-hidden="true">🎵</span>
+                <span class="mode-card-copy"><strong>멜로디</strong><small>노래 순서로 쳐요</small></span>
+              </label>
+              <label class="mode-card">
+                <input type="radio" name="mode" value="echo">
+                <span class="mode-card-icon" aria-hidden="true">👂</span>
+                <span class="mode-card-copy"><strong>따라 치기</strong><small>가락을 기억해요</small></span>
+              </label>
+              <label class="mode-card">
+                <input type="radio" name="mode" value="free">
+                <span class="mode-card-icon" aria-hidden="true">🎹</span>
+                <span class="mode-card-copy"><strong>자유 연주</strong><small>마음껏 두드려요</small></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset id="difficulty-options" class="choice-section compact-choice">
+            <legend>빠르기</legend>
+            <div class="segmented" role="radiogroup" aria-label="난이도 선택">
+              <label><input type="radio" name="level" value="easy"><span>쉬움</span></label>
+              <label><input type="radio" name="level" value="normal" checked><span>보통</span></label>
+              <label><input type="radio" name="level" value="hard"><span>어려움</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset id="find-options" class="choice-section compact-choice" hidden>
+            <legend>음 찾기 방식</legend>
+            <div class="segmented" role="radiogroup" aria-label="음 찾기 방식">
+              <label><input type="radio" name="find-sub" value="see" checked><span>보고 찾기</span></label>
+              <label><input type="radio" name="find-sub" value="hear"><span>듣고 찾기</span></label>
+            </div>
+            <p class="assistive-feature">⌨ 🔊 키보드와 소리만으로도 할 수 있어요.</p>
+          </fieldset>
+
+          <div id="song-options" class="choice-section song-options" hidden>
+            <label for="song-select">연주할 곡</label>
+            <select id="song-select" name="song">
+              <option value="scale15">15음 음계</option>
+              <option value="twinkle" selected>작은 별</option>
+              <option value="airplane">비행기</option>
+              <option value="london">런던 다리</option>
+              <option value="ode">환희의 송가</option>
+              <option value="birthday">생일 축하합니다</option>
+              <option value="jingle">징글벨 후렴</option>
+            </select>
+          </div>
+
+          <p id="echo-assistive" class="assistive-feature choice-section" hidden>⌨ 🔊 따라 치기는 키보드와 소리만으로도 끝까지 할 수 있어요.</p>
+          <p id="free-assistive" class="assistive-feature choice-section" hidden>⌨ 🔊 자유 연주는 키보드와 소리만으로도 즐길 수 있어요.</p>
+
+          <div class="start-actions">
+            <button id="start-btn" class="primary-btn start-btn" type="button">Start!</button>
+            <button id="board-btn" class="secondary-btn icon-text-btn" type="button" aria-haspopup="dialog" hidden>🏆 순위표</button>
+          </div>
+          <p id="start-best" class="best-line">아직 기록이 없어요. 첫 기록을 만들어 볼까요?</p>
+        </div>
       </div>
-      <p class="hint">분홍 망치로 두더지를 30초 안에 최대한 많이 잡으세요!</p>
     </section>
 
-    <!-- ▣ 게임 화면 -->
-    <section id="game-screen" class="screen" aria-label="게임 화면" hidden>
-      <svg class="game-ambience" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <g class="float-glyph glyph-a">
-          <path d="M0 -3.5 0.9 -0.9 3.7 -0.9 1.4 0.7 2.2 3.4 0 1.8 -2.2 3.4 -1.4 0.7 -3.7 -0.9 -0.9 -0.9Z" />
-        </g>
-        <g class="float-glyph glyph-b">
-          <path d="M0 -3.5 0.9 -0.9 3.7 -0.9 1.4 0.7 2.2 3.4 0 1.8 -2.2 3.4 -1.4 0.7 -3.7 -0.9 -0.9 -0.9Z" />
-        </g>
-        <g class="float-glyph glyph-c">
-          <path d="M0 -3.5 0.9 -0.9 3.7 -0.9 1.4 0.7 2.2 3.4 0 1.8 -2.2 3.4 -1.4 0.7 -3.7 -0.9 -0.9 -0.9Z" />
-        </g>
-        <g class="float-glyph note-a">
-          <path d="M0 -5v7.2a2.7 2.7 0 1 1-1.1-2.1v-8.4h1.1l4 1.3v2.1Z" />
-        </g>
-        <g class="float-glyph note-b">
-          <path d="M0 -5v7.2a2.7 2.7 0 1 1-1.1-2.1v-8.4h1.1l4 1.3v2.1Z" />
-        </g>
-      </svg>
-      <div class="hud">
-        <div id="timer" class="timer">⏱ 30초</div>
-        <div id="score" class="score">🌟 점수: 0</div>
+    <section id="game-screen" class="screen" tabindex="-1" aria-label="게임 화면" hidden>
+      <div class="game-ambience" aria-hidden="true">
+        <svg class="float-glyph" style="--x:14%;--y:78%;--s:1.1;--d:-0.6s" viewBox="-4 -4 8 8"><path d="M0 -3.5 0.9 -0.9 3.7 -0.9 1.4 0.7 2.2 3.4 0 1.8 -2.2 3.4 -1.4 0.7 -3.7 -0.9 -0.9 -0.9Z"/></svg>
+        <svg class="float-glyph pink" style="--x:82%;--y:24%;--s:.9;--d:-2.1s" viewBox="-4 -4 8 8"><path d="M0 -3.5 0.9 -0.9 3.7 -0.9 1.4 0.7 2.2 3.4 0 1.8 -2.2 3.4 -1.4 0.7 -3.7 -0.9 -0.9 -0.9Z"/></svg>
+        <svg class="float-glyph blue" style="--x:74%;--y:82%;--s:.75;--d:-3.2s" viewBox="-4 -4 8 8"><path d="M0 -3.5 0.9 -0.9 3.7 -0.9 1.4 0.7 2.2 3.4 0 1.8 -2.2 3.4 -1.4 0.7 -3.7 -0.9 -0.9 -0.9Z"/></svg>
+        <svg class="float-glyph blue note" style="--x:22%;--y:32%;--s:.85;--d:-1.4s" viewBox="-6 -9 11 15"><path d="M0 -5v7.2a2.7 2.7 0 1 1-1.1-2.1v-8.4h1.1l4 1.3v2.1Z"/></svg>
+        <svg class="float-glyph note" style="--x:88%;--y:56%;--s:.7;--d:-3.8s" viewBox="-6 -9 11 15"><path d="M0 -5v7.2a2.7 2.7 0 1 1-1.1-2.1v-8.4h1.1l4 1.3v2.1Z"/></svg>
       </div>
-      <div class="stage" id="stage">
-        <img class="tonguedrum" src="assets/tonguedrum.png" alt="텅드럼 캐릭터">
-        <div id="mole-container"></div>
+
+      <div class="hud" aria-label="게임 정보">
+        <div id="timer" class="hud-card timer" role="timer" aria-label="남은 시간">
+          <span class="hud-icon" aria-hidden="true">⏱</span>
+          <span id="timer-value" class="hud-value">30</span>
+          <span class="hud-unit">초</span>
+        </div>
+        <div class="hud-center">
+          <strong id="hud-mode-title">두더지잡기</strong>
+          <span id="hud-progress" hidden></span>
+          <span id="hud-big" hidden></span>
+          <span id="hud-lives" aria-label="남은 목숨" hidden></span>
+          <span id="combo-badge" class="combo-badge" aria-hidden="true" hidden>콤보 0</span>
+        </div>
+        <div id="score" class="hud-card score" aria-label="점수">
+          <span class="hud-icon" aria-hidden="true">🌟</span>
+          <span id="score-value" class="hud-value">0</span>
+          <span class="hud-unit">점</span>
+        </div>
       </div>
-      <img id="hammer-cursor" class="hammer-cursor" src="assets/hammer.png" alt="" aria-hidden="true">
+
+      <div class="hud-actions" aria-label="게임 조작">
+        <button id="pause-btn" class="round-btn" type="button" aria-label="일시정지">⏸</button>
+        <button id="mute-btn" class="round-btn" type="button" aria-label="소리 끄기" aria-pressed="false">🔊</button>
+      </div>
+
+      <div id="stage" class="stage">
+        <img
+          class="tonguedrum"
+          src="assets/tonguedrum-2048.webp"
+          srcset="assets/tonguedrum-1024.webp 1024w, assets/tonguedrum-2048.webp 2048w"
+          sizes="(max-width: 640px) 100vw, 820px"
+          width="3609"
+          height="3505"
+          decoding="async"
+          alt="15키 텅드럼 연주판">
+        <svg id="tongue-layer" viewBox="0 0 3609 3505" aria-hidden="true"></svg>
+        <div id="mole-container" aria-hidden="true">
+          <div class="mole-slot" data-tongue-id="center-upper" data-note="E3" style="left:57.16%;top:35.09%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="bottom-center" data-note="F3" style="left:57.42%;top:62.66%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="lower-left-inner" data-note="G3" style="left:41.90%;top:54.90%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="lower-right-inner" data-note="A3" style="left:73.92%;top:55.86%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="left-mid-inner" data-note="B3" style="left:36.92%;top:38.35%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="right-mid-inner" data-note="C4" style="left:76.94%;top:37.42%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="upper-left-inner" data-note="D4" style="left:48.61%;top:24.52%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="upper-right-inner" data-note="E4" style="left:64.96%;top:22.71%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="lower-right-outer" data-note="F4" style="left:68.43%;top:65.78%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="lower-left-outer" data-note="G4" style="left:45.32%;top:66.75%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="right-mid-outer" data-note="A4" style="left:81.08%;top:47.52%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="left-mid-outer" data-note="B4" style="left:32.25%;top:47.65%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="right-upper-outer" data-note="C5" style="left:75.03%;top:26.14%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="left-upper-outer" data-note="D5" style="left:37.08%;top:26.75%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+          <div class="mole-slot" data-tongue-id="top-center" data-note="E5" style="left:56.47%;top:17.20%"><img class="mole" src="assets/mole.png" width="93" height="104" alt=""></div>
+        </div>
+        <div id="countdown" class="countdown" aria-live="assertive" hidden></div>
+      </div>
+
+      <div class="mode-actions" aria-label="현재 놀이 조작">
+        <button id="prompt-replay-btn" class="secondary-btn" type="button" hidden>🔊 다시 듣기</button>
+        <button id="replay-btn" class="secondary-btn" type="button" hidden>▶ 방금 연주 듣기</button>
+        <button id="end-mode-btn" class="secondary-btn" type="button" hidden>결과 보기</button>
+      </div>
+      <img id="hammer-cursor" class="hammer-cursor" src="assets/hammer.png" width="231" height="222" alt="" aria-hidden="true">
     </section>
 
-    <!-- ▣ 종료 화면 -->
-    <section id="end-screen" class="screen" aria-label="결과 화면" hidden>
+    <section id="end-screen" class="screen" aria-labelledby="result-title" hidden>
       <div class="end-card">
-        <h1 class="end-title">게임 종료!</h1>
-        <p class="end-score">최종 점수: <span id="final-score">0</span>점</p>
-        <p id="end-message" class="end-message">조금만 더 연습해요!</p>
-        <button id="restart-btn" class="primary-btn" type="button" aria-label="다시 시작">다시 시작</button>
+        <p class="eyebrow">오늘의 텅드럼 기록</p>
+        <h1 id="result-title" class="end-title">게임 끝!</h1>
+        <p id="stars" class="stars" aria-label="별 0개">☆☆☆</p>
+        <p class="end-score"><span id="final-score-label">점수</span> <strong id="final-score">0</strong><span id="final-score-unit">점</span> <span id="record-badge" class="badge-record" hidden>🎉 신기록!</span></p>
+        <dl id="end-stats" class="end-stats">
+          <div><dt>잡은 두더지</dt><dd>0 / 0마리</dd></div>
+          <div><dt>최고 콤보</dt><dd>0</dd></div>
+          <div><dt>최고 기록</dt><dd>0점</dd></div>
+        </dl>
+        <p id="end-message" class="end-message">천천히 다시 해 봐요.</p>
+
+        <form id="board-name-form" class="board-name-form" hidden>
+          <label for="board-name">순위표에 쓸 별명</label>
+          <div class="inline-form">
+            <input id="board-name" name="board-name" type="text" maxlength="8" autocomplete="off" placeholder="별명을 써 주세요">
+            <button id="board-save" class="secondary-btn" type="submit">저장</button>
+          </div>
+          <small>실명 대신 별명을 써 주세요. 이 기기에만 저장돼요.</small>
+        </form>
+
+        <div class="end-actions primary-actions">
+          <button id="restart-btn" class="primary-btn" type="button">다시 하기</button>
+          <button id="home-btn" class="secondary-btn" type="button">처음 화면</button>
+        </div>
+        <div class="end-actions utility-actions">
+          <button class="secondary-btn board-open-btn" type="button" data-action="open-board" hidden>🏆 순위표</button>
+          <button id="card-btn" class="secondary-btn" type="button" aria-haspopup="dialog">🖼 결과 카드</button>
+          <button id="share-btn" class="secondary-btn" type="button">공유</button>
+        </div>
       </div>
     </section>
 
-  </div>
-  <script src="game.js"></script>
+    <div id="pause-overlay" class="modal pause-overlay" role="dialog" aria-modal="true" aria-labelledby="pause-title" hidden>
+      <div class="modal-card pause-card">
+        <span class="modal-illustration" aria-hidden="true">⏸</span>
+        <h2 id="pause-title">잠깐 멈춤</h2>
+        <p>준비되면 이어서 해요. 시간과 두더지도 함께 멈춰 있어요.</p>
+        <button id="resume-btn" class="primary-btn" type="button">계속하기</button>
+        <div id="pause-sound-host" class="sound-host"></div>
+      </div>
+    </div>
+
+    <div id="settings-modal" class="modal settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
+      <div class="modal-card settings-card">
+        <header class="modal-header">
+          <div>
+            <p class="eyebrow">내게 맞게 바꿔요</p>
+            <h2 id="settings-title">설정</h2>
+          </div>
+          <button id="settings-close" class="round-btn close-btn" type="button" aria-label="설정 닫기">✕</button>
+        </header>
+
+        <div class="settings-tabs" role="tablist" aria-label="설정 종류">
+          <button id="student-settings-tab" class="tab-btn" type="button" role="tab" aria-controls="student-settings" aria-selected="true" data-settings-tab="student">학생</button>
+          <button id="teacher-settings-tab" class="tab-btn" type="button" role="tab" aria-controls="teacher-settings" aria-selected="false" data-settings-tab="teacher" hidden>선생님</button>
+        </div>
+
+        <section id="student-settings" class="settings-section" role="tabpanel" aria-labelledby="student-settings-tab">
+          <div id="settings-sound-host" class="sound-host">
+            <fieldset id="sound-settings" class="settings-group sound-settings">
+              <legend>소리</legend>
+              <label class="range-row" for="volume"><span>볼륨</span><input id="volume" type="range" min="0" max="100" step="5" value="70"></label>
+              <div class="setting-block">
+                <span class="setting-label">시간 알림 소리</span>
+                <div class="segmented compact" role="radiogroup" aria-label="시간 알림 소리">
+                  <label><input type="radio" name="ticks" value="all" checked><span>매초</span></label>
+                  <label><input type="radio" name="ticks" value="last10"><span>마지막 10초</span></label>
+                  <label><input type="radio" name="ticks" value="off"><span>끄기</span></label>
+                </div>
+              </div>
+              <p class="setting-note">아이폰에서 소리가 안 나면 옆면의 무음 스위치를 확인하세요.</p>
+            </fieldset>
+          </div>
+
+          <fieldset class="settings-group">
+            <legend>화면과 조작</legend>
+            <label class="select-row" for="label-style"><span>텅 이름 표시</span>
+              <select id="label-style">
+                <option value="ko" selected>계이름</option>
+                <option value="num">숫자</option>
+                <option value="abc">음이름</option>
+                <option value="off">끄기</option>
+              </select>
+            </label>
+            <label class="switch-row" for="key-hints"><span><strong>키 안내 보기</strong><small>텅 위에 연주 키를 표시해요.</small></span><input id="key-hints" type="checkbox" role="switch"></label>
+            <label class="switch-row" for="preview-next"><span><strong>다음 음 미리 보기</strong><small>멜로디에서 다음 텅을 옅게 알려 줘요.</small></span><input id="preview-next" type="checkbox" role="switch" checked></label>
+            <label class="switch-row" for="vibrate"><span><strong>명중 진동</strong><small>안드로이드 기기에서만 지원해요.</small></span><input id="vibrate" type="checkbox" role="switch" checked></label>
+          </fieldset>
+
+          <details class="key-help">
+            <summary>⌨ 키보드 연주 안내</summary>
+            <div class="key-grid" aria-label="키보드 음 배치">
+              <span><kbd>E R T Y U</kbd><small>낮은 미~시</small></span>
+              <span><kbd>1 2 3 4 5 6 7</kbd><small>도~시</small></span>
+              <span><kbd>Shift + 1 2 3</kbd><small>높은 도~미</small></span>
+              <span><kbd>P</kbd><small>멈춤</small></span>
+              <span><kbd>M</kbd><small>음소거</small></span>
+              <span><kbd>K</kbd><small>키 안내</small></span>
+            </div>
+          </details>
+
+          <div class="settings-group install-help">
+            <h3>앱처럼 사용하기</h3>
+            <button id="install-btn" class="secondary-btn" type="button" hidden>📲 앱으로 설치</button>
+            <p id="ios-install-hint" class="setting-note" hidden>아이폰·아이패드에서는 Safari의 공유 버튼을 누른 뒤 “홈 화면에 추가”를 골라 주세요.</p>
+          </div>
+        </section>
+
+        <section id="teacher-settings" class="settings-section" role="tabpanel" aria-labelledby="teacher-settings-tab" hidden>
+          <p class="teacher-note">수업 편의를 위한 장치이며 보안 기능은 아니에요. 바꾼 값은 이 기기에 저장됩니다.</p>
+          <fieldset class="settings-group teacher-grid">
+            <legend>수업 게임</legend>
+            <label for="teacher-time"><span>게임 시간</span>
+              <select id="teacher-time"><option value="20">20초</option><option value="30" selected>30초</option><option value="45">45초</option><option value="60">60초</option></select>
+            </label>
+            <label for="teacher-level"><span>난이도 고정</span>
+              <select id="teacher-level"><option value="">고정하지 않음</option><option value="easy">쉬움</option><option value="normal">보통</option><option value="hard">어려움</option></select>
+            </label>
+            <label for="teacher-tongues"><span>사용할 텅</span>
+              <select id="teacher-tongues"><option value="all">15개 전부</option><option value="mid">가운데 1~7</option><option value="five">도~솔 1~5</option><option value="custom">직접 고르기</option></select>
+            </label>
+          </fieldset>
+
+          <div class="settings-group tongue-picker-wrap" hidden>
+            <h3>사용할 텅 직접 고르기</h3>
+            <p>드럼 위의 텅을 눌러 켜고 끌 수 있어요. 한 개 이상 골라 주세요.</p>
+            <svg id="teacher-tongue-picker" viewBox="0 0 3609 3505" role="group" aria-label="사용할 텅 선택"></svg>
+          </div>
+
+          <fieldset id="teacher-modes" class="settings-group check-grid">
+            <legend>보이는 놀이</legend>
+            <label><input type="checkbox" name="teacher-mode" value="classic" checked> 🔨 두더지잡기</label>
+            <label><input type="checkbox" name="teacher-mode" value="find" checked> 🎯 음 찾기</label>
+            <label><input type="checkbox" name="teacher-mode" value="melody" checked> 🎵 멜로디</label>
+            <label><input type="checkbox" name="teacher-mode" value="echo" checked> 👂 따라 치기</label>
+            <label><input type="checkbox" name="teacher-mode" value="free" checked> 🎹 자유 연주</label>
+          </fieldset>
+
+          <fieldset class="settings-group">
+            <legend>학생 선택과 기록</legend>
+            <label class="switch-row" for="label-lock"><span><strong>텅 이름 표시 고정</strong><small>학생이 라벨 방식을 바꾸지 못하게 해요.</small></span><input id="label-lock" type="checkbox" role="switch"></label>
+            <label class="switch-row" for="board-enabled"><span><strong>교실 순위표 사용</strong><small>점수는 이 기기에만 저장돼요.</small></span><input id="board-enabled" type="checkbox" role="switch"></label>
+          </fieldset>
+
+          <div class="settings-group preset-maker">
+            <h3>수업 링크</h3>
+            <p>이 설정을 다른 기기에서도 그대로 열 수 있는 링크를 만들어요.</p>
+            <button id="make-preset-btn" class="secondary-btn" type="button">이 설정으로 링크 만들기</button>
+            <div id="preset-link-row" class="inline-form" hidden>
+              <input id="preset-link" type="url" readonly aria-label="만든 수업 링크">
+              <button id="copy-preset-btn" class="secondary-btn" type="button">복사</button>
+            </div>
+            <p class="setting-note">QR이 필요하면 복사한 링크를 QR 생성 사이트에 붙여 넣으세요.</p>
+          </div>
+          <button id="clear-board-btn" class="danger-btn" type="button">순위표 지우기</button>
+        </section>
+      </div>
+    </div>
+
+    <div id="board-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="board-title" hidden>
+      <div class="modal-card board-card">
+        <header class="modal-header">
+          <div><p class="eyebrow">이 기기의 기록</p><h2 id="board-title">🏆 교실 순위표</h2></div>
+          <button id="board-close" class="round-btn close-btn" type="button" aria-label="순위표 닫기">✕</button>
+        </header>
+        <p class="setting-note">순위표는 이 기기에만 저장돼요. 실명 대신 별명을 써 주세요.</p>
+        <ol id="board-list" class="board-list"><li class="empty-state">아직 기록이 없어요.</li></ol>
+      </div>
+    </div>
+
+    <div id="result-card-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="result-card-title" hidden>
+      <div class="modal-card result-card-dialog">
+        <header class="modal-header">
+          <div><p class="eyebrow">오늘의 성취를 남겨요</p><h2 id="result-card-title">결과 카드</h2></div>
+          <button id="result-card-close" class="round-btn close-btn" type="button" aria-label="결과 카드 닫기">✕</button>
+        </header>
+        <canvas id="result-card-canvas" width="1080" height="1350" aria-label="텅드럼 게임 결과 카드 미리보기"></canvas>
+        <div class="end-actions">
+          <button id="card-save" class="primary-btn" type="button">이미지 저장</button>
+          <button id="card-share" class="secondary-btn" type="button">공유</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="clear-board-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="clear-board-title" hidden>
+      <div class="modal-card confirm-card">
+        <h2 id="clear-board-title">순위표를 지울까요?</h2>
+        <p>모든 교실 기록이 사라지고 되돌릴 수 없어요.</p>
+        <div class="end-actions">
+          <button id="confirm-clear-board" class="danger-btn" type="button">지우기</button>
+          <button id="cancel-clear-board" class="secondary-btn" type="button">취소</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <div id="sr-status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  </main>
+
+  <noscript>이 게임은 자바스크립트를 켜야 실행할 수 있어요.</noscript>
+  <script src="js/config.js" defer></script>
+  <script src="js/tongues.js" defer></script>
+  <script src="js/storage.js" defer></script>
+  <script src="js/audio.js" defer></script>
+  <script src="js/effects.js" defer></script>
+  <script src="js/rules.js" defer></script>
+  <script src="js/songs.js" defer></script>
+  <script src="js/game.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/debug.js" defer></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>
